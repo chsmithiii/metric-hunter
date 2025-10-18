@@ -1,4 +1,4 @@
-# Metric Hunter
+# Metric Hunter [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE) ![Status](https://img.shields.io/badge/Project-Template-lightgrey)
 Map any process → inventory signals → propose KPIs (leading/lagging) → expose levers.
 
 ## Problem
