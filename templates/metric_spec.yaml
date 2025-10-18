@@ -1,0 +1,22 @@
+```yaml
+metric:
+  name: ""
+  owner: ""
+  description: ""
+  grain: "user|account|session|order"
+  type: "leading|lagging|health"
+  formula: "plain-language definition"
+  sql: "SELECT ... -- optional"
+  data_source: "warehouse.table/view"
+  dimensions: ["country","segment","platform"]
+  filters: ["active=1"]
+  latency_days: 0
+  update_frequency: "daily|weekly|monthly"
+  validity_checks: ["missingness","outliers","seasonality"]
+  sensitivity_notes: ""
+  thresholds: { warn: null, alert: null }
+  slo: "target and window"
+  alerts: { channel: "slack|email", cadence: "daily" }
+  caveats: ""
+  adoption: { used_by: ["teamA","teamB"], first_shipped: "" }
+  review_cadence: "quarterly"
