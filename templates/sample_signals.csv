@@ -1,0 +1,5 @@
+timestamp,entity_id,event,value,source
+2025-01-01T09:00:00Z,1001,view,1,app
+2025-01-01T09:02:00Z,1001,click,1,app
+2025-01-01T09:05:00Z,1001,apply,1,web
+2025-01-01T09:07:00Z,1002,view,1,web
