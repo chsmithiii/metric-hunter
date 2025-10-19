@@ -1,21 +1,21 @@
-name: ci
-on: [push, pull_request]
-jobs:
-  check-templates:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with: { python-version: '3.11' }
-      - run: python -m pip install --upgrade pip
-      - run: pip install -r requirements.txt
-      - name: Validate template YAML
-        run: |
-          python - <<'PY'
-          import yaml,sys,glob
-          for p in glob.glob("templates/*.yaml"):
-              with open(p,'r') as f:
-                  data=yaml.safe_load(f)
-              assert isinstance(data, dict), f"Not a mapping: {p}"
-          print("YAML ok")
-          PY
+metric:
+  name: ""
+  owner: ""
+  description: ""
+  grain: "user|account|session|order"
+  type: "leading|lagging|health"
+  formula: "plain-language definition"
+  sql: "SELECT ... -- optional"
+  data_source: "warehouse.table/view"
+  dimensions: ["country","segment","platform"]
+  filters: ["active=1"]
+  latency_days: 0
+  update_frequency: "daily|weekly|monthly"
+  validity_checks: ["missingness","outliers","seasonality"]
+  sensitivity_notes: ""
+  thresholds: { warn: null, alert: null }
+  slo: "target and window"
+  alerts: { channel: "slack|email", cadence: "daily" }
+  caveats: ""
+  adoption: { used_by: ["teamA","teamB"], first_shipped: "" }
+  review_cadence: "quarterly"
