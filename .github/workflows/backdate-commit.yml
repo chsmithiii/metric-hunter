@@ -7,11 +7,11 @@ on:
         required: true
         default: "C. Hakeem Smith"
       email:
-        description: Commit author email (use your GitHub noreply email)
+        description: Commit author email (your GitHub noreply)
         required: true
         default: "48100389+chsmithiii@users.noreply.github.com"
       date:
-        description: ISO timestamp with timezone (e.g., 2025-10-21T10:00:00+02:00)
+        description: ISO timestamp with timezone, e.g. 2025-10-21T10:00:00+02:00
         required: true
         default: "2025-10-21T10:00:00+02:00"
 
@@ -29,12 +29,19 @@ jobs:
           mkdir -p .meta
           echo "Backdated contribution marker for ${{ github.event.inputs.date }}" > ".meta/contrib_${{ github.event.inputs.date }}.txt"
       - name: Commit with your author & backdated times
+        env:
+          AUTHOR_NAME: ${{ github.event.inputs.name }}
+          AUTHOR_EMAIL: ${{ github.event.inputs.email }}
+          COMMIT_DATE: ${{ github.event.inputs.date }}
         run: |
-          git add .meta/
-          git config user.name "${{ github.event.inputs.name }}"
-          git config user.email "${{ github.event.inputs.email }}"
-          export GIT_AUTHOR_DATE="${{ github.event.inputs.date }}"
-          export GIT_COMMITTER_DATE="${{ github.event.inputs.date }}"
-          git commit --author "${{ github.event.inputs.name }} <${{ github.event.inputs.email }}>" \
-            -m "chore: backdated marker (${ { github.event.inputs.date } })" --date "${{ github.event.inputs.date }}"
+          git add -f .meta/
+          git config user.name "$AUTHOR_NAME"
+          git config user.email "$AUTHOR_EMAIL"
+          export GIT_AUTHOR_DATE="$COMMIT_DATE"
+          export GIT_COMMITTER_DATE="$COMMIT_DATE"
+          git commit --author "$AUTHOR_NAME <$AUTHOR_EMAIL>" \
+            -m "chore: backdated marker ($COMMIT_DATE)" --date "$COMMIT_DATE"
           git push
+      - name: Show last commit (for verification)
+        run: |
+          git show -s --format='%h %cd | %an <%ae> | %s' --date=iso-strict
