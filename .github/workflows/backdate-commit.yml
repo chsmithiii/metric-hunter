@@ -1,0 +1,40 @@
+name: backdate-commit
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: Commit author name
+        required: true
+        default: "C. Hakeem Smith"
+      email:
+        description: Commit author email (use your GitHub noreply email)
+        required: true
+        default: "48100389+chsmithiii@users.noreply.github.com"
+      date:
+        description: ISO timestamp with timezone (e.g., 2025-10-21T10:00:00+02:00)
+        required: true
+        default: "2025-10-21T10:00:00+02:00"
+
+permissions:
+  contents: write
+
+jobs:
+  make-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - name: Create small change so the commit is real
+        run: |
+          mkdir -p .meta
+          echo "Backdated contribution marker for ${{ github.event.inputs.date }}" > ".meta/contrib_${{ github.event.inputs.date }}.txt"
+      - name: Commit with your author & backdated times
+        run: |
+          git add .meta/
+          git config user.name "${{ github.event.inputs.name }}"
+          git config user.email "${{ github.event.inputs.email }}"
+          export GIT_AUTHOR_DATE="${{ github.event.inputs.date }}"
+          export GIT_COMMITTER_DATE="${{ github.event.inputs.date }}"
+          git commit --author "${{ github.event.inputs.name }} <${{ github.event.inputs.email }}>" \
+            -m "chore: backdated marker (${ { github.event.inputs.date } })" --date "${{ github.event.inputs.date }}"
+          git push
