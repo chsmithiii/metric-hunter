@@ -1,0 +1,146 @@
+name: "Metric request"
+description: "Propose a new metric (owner, grain, formula, SLO, validity checks)."
+title: "[Metric] <name>"
+labels: ["metric-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form to define a metric that can live in `/templates/metric_spec.yaml`.
+        Keep it concise and decision-oriented.
+
+  - type: input
+    id: name
+    attributes:
+      label: Metric name
+      placeholder: e.g., Time to Hire (median)
+    validations:
+      required: true
+
+  - type: input
+    id: owner
+    attributes:
+      label: Metric owner (team / person)
+      placeholder: e.g., TA Analytics / Hiring Ops
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Business purpose (one-liner)
+      placeholder: What decision does this metric inform?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: grain
+    attributes:
+      label: Grain
+      options: ["user", "account", "session", "order", "requisition", "candidate", "other"]
+    validations:
+      required: true
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Metric type
+      description: Leading affects future outcomes; lagging reports outcomes; health guards the system.
+      options: ["leading", "lagging", "health"]
+    validations:
+      required: true
+
+  - type: textarea
+    id: formula
+    attributes:
+      label: Plain-language formula
+      placeholder: e.g., Median days between req_open_date and accepted_offer_date for hires in period.
+    validations:
+      required: true
+
+  - type: input
+    id: sql
+    attributes:
+      label: SQL (optional)
+      placeholder: SELECT P50(DATEDIFF(day, req_open, accepted_offer)) AS tth ...
+
+  - type: input
+    id: data_source
+    attributes:
+      label: Data source
+      placeholder: warehouse.schema.table OR API
+
+  - type: input
+    id: dimensions
+    attributes:
+      label: Dimensions (comma-separated)
+      placeholder: country, segment, platform
+
+  - type: input
+    id: filters
+    attributes:
+      label: Default filters
+      placeholder: active = 1, internal = false
+
+  - type: input
+    id: latency_days
+    attributes:
+      label: Expected data latency (days)
+      placeholder: "0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: update_frequency
+    attributes:
+      label: Update frequency
+      options: ["daily", "weekly", "monthly", "quarterly"]
+
+  - type: checkboxes
+    id: validity_checks
+    attributes:
+      label: Validity checks
+      options:
+        - label: Missingness
+        - label: Outliers
+        - label: Seasonality / drift
+        - label: Backfill anomalies
+        - label: Known biases documented
+
+  - type: textarea
+    id: sensitivity_notes
+    attributes:
+      label: Sensitivity / bias notes
+      placeholder: Known fairness risks, proxies, or compliance concerns.
+
+  - type: textarea
+    id: thresholds
+    attributes:
+      label: Thresholds / SLO
+      placeholder: warn >= X, alert >= Y; target is Z over N weeks.
+
+  - type: input
+    id: alerts
+    attributes:
+      label: Alerts (channel + cadence)
+      placeholder: slack://#metrics-daily or email list
+
+  - type: textarea
+    id: adoption
+    attributes:
+      label: Adoption (who uses it)
+      placeholder: Teams, dashboards, decision meetings.
+
+  - type: textarea
+    id: caveats
+    attributes:
+      label: Caveats / exclusions
+      placeholder: Known gaps and when NOT to use the metric.
+
+  - type: checkboxes
+    id: attest
+    attributes:
+      label: Attestation
+      options:
+        - label: I confirm this request contains no sensitive personal data (PII/PHI).
+          required: true
